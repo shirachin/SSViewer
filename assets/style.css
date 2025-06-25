@@ -141,17 +141,18 @@ header p {
 .order-controls {
     display: flex;
     flex-direction: column;
-    gap: 2px;
+    gap: 1px;
 }
 
 .order-btn {
-    padding: 6px 8px;
-    min-width: 32px;
-    height: 32px;
+    padding: 4px 6px;
+    min-width: 28px;
+    height: 28px;
     display: flex;
     align-items: center;
     justify-content: center;
     transition: all 0.2s ease;
+    font-size: 0.8rem;
 }
 
 .order-btn:hover:not(:disabled) {
@@ -165,8 +166,8 @@ header p {
 }
 
 .order-btn svg {
-    width: 14px;
-    height: 14px;
+    width: 12px;
+    height: 12px;
 }
 
 .btn {

@@ -112,6 +112,12 @@ class ImageViewer {
                 </div>
                 <div class="image-actions">
                     <div class="order-controls">
+                        <button class="btn btn-secondary order-btn top-btn" onclick="imageViewer.moveImageToTop(${imageData.id})" title="最上に移動">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <polyline points="18,15 12,9 6,15"></polyline>
+                                <polyline points="18,11 12,5 6,11"></polyline>
+                            </svg>
+                        </button>
                         <button class="btn btn-secondary order-btn up-btn" onclick="imageViewer.moveImageUp(${imageData.id})" title="上に移動">
                             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                 <polyline points="18,15 12,9 6,15"></polyline>
@@ -120,6 +126,12 @@ class ImageViewer {
                         <button class="btn btn-secondary order-btn down-btn" onclick="imageViewer.moveImageDown(${imageData.id})" title="下に移動">
                             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                 <polyline points="6,9 12,15 18,9"></polyline>
+                            </svg>
+                        </button>
+                        <button class="btn btn-secondary order-btn bottom-btn" onclick="imageViewer.moveImageToBottom(${imageData.id})" title="最下に移動">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <polyline points="6,9 12,15 18,9"></polyline>
+                                <polyline points="6,13 12,19 18,13"></polyline>
                             </svg>
                         </button>
                     </div>
@@ -462,12 +474,63 @@ class ImageViewer {
         }
     }
 
+    // 画像を最上に移動
+    moveImageToTop(id) {
+        const currentIndex = this.images.findIndex(img => img.id === id);
+        if (currentIndex > 0) {
+            // 配列の順序を変更
+            const temp = this.images[currentIndex];
+            this.images[currentIndex] = this.images[0];
+            this.images[0] = temp;
+            
+            // DOMの順序を変更
+            const currentElement = this.imageGallery.querySelector(`[data-id="${id}"]`);
+            const firstElement = this.imageGallery.querySelector('.image-item');
+            
+            if (currentElement && firstElement) {
+                this.imageGallery.insertBefore(currentElement, firstElement);
+            }
+            
+            // 矢印ボタンの状態を更新
+            this.updateOrderButtons();
+        }
+    }
+
+    // 画像を最下に移動
+    moveImageToBottom(id) {
+        const currentIndex = this.images.findIndex(img => img.id === id);
+        if (currentIndex < this.images.length - 1) {
+            // 配列の順序を変更
+            const temp = this.images[currentIndex];
+            this.images[currentIndex] = this.images[this.images.length - 1];
+            this.images[this.images.length - 1] = temp;
+            
+            // DOMの順序を変更
+            const currentElement = this.imageGallery.querySelector(`[data-id="${id}"]`);
+            const lastElement = this.imageGallery.querySelector('.image-item:last-child');
+            
+            if (currentElement && lastElement) {
+                this.imageGallery.insertBefore(currentElement, lastElement.nextSibling);
+            }
+            
+            // 矢印ボタンの状態を更新
+            this.updateOrderButtons();
+        }
+    }
+
     // 矢印ボタンの有効/無効状態を更新
     updateOrderButtons() {
         const imageItems = this.imageGallery.querySelectorAll('.image-item');
         imageItems.forEach((item, index) => {
+            const topBtn = item.querySelector('.top-btn');
             const upBtn = item.querySelector('.up-btn');
             const downBtn = item.querySelector('.down-btn');
+            const bottomBtn = item.querySelector('.bottom-btn');
+            
+            if (topBtn) {
+                topBtn.disabled = index === 0;
+                topBtn.style.opacity = index === 0 ? '0.5' : '1';
+            }
             
             if (upBtn) {
                 upBtn.disabled = index === 0;
@@ -477,6 +540,11 @@ class ImageViewer {
             if (downBtn) {
                 downBtn.disabled = index === imageItems.length - 1;
                 downBtn.style.opacity = index === imageItems.length - 1 ? '0.5' : '1';
+            }
+            
+            if (bottomBtn) {
+                bottomBtn.disabled = index === imageItems.length - 1;
+                bottomBtn.style.opacity = index === imageItems.length - 1 ? '0.5' : '1';
             }
         });
     }
