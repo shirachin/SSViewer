@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>画像ビューア - クリップボード貼り付け</title>
+
+    <!-- ファビコン -->
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
+    <link rel="alternate icon"
+        href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><circle cx='16' cy='16' r='15' fill='%23667eea' stroke='%23fff' stroke-width='1'/><rect x='8' y='6' width='16' height='18' rx='2' fill='none' stroke='%23fff' stroke-width='2'/><rect x='10' y='4' width='12' height='4' rx='1' fill='none' stroke='%23fff' stroke-width='2'/></svg>">
+
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+</head>
+
+<body>
+    <button id="usageBtn" class="btn btn-secondary" style="position:absolute;top:20px;right:30px;z-index:101;">使い方・説明</button>
+
+    <div class="container">
+        <div class="paste-area" id="pasteArea">
+            <div class="paste-hint">
+                <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path>
+                    <rect x="8" y="2" width="8" height="4" rx="1" ry="1"></rect>
+                </svg>
+                <p>ここに画像を貼り付けてください</p>
+            </div>
+        </div>
+
+        <div class="image-gallery" id="imageGallery">
+            <!-- 画像がここに追加されます -->
+        </div>
+
+        <div class="controls">
+            <button id="clearAll" class="btn btn-secondary">すべて削除</button>
+            <button id="downloadAll" class="btn btn-primary">すべてダウンロード</button>
+        </div>
+    </div>
+
+    <!-- すべて削除モーダル -->
+    <div id="clearAllModal" class="modal" style="display:none;">
+        <div class="modal-content">
+            <p>すべての画像を削除しますか？</p>
+            <div class="modal-actions">
+                <button id="modalConfirm" class="btn btn-danger">はい</button>
+                <button id="modalCancel" class="btn btn-secondary">いいえ</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+
+</html>
