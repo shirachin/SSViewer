@@ -111,6 +111,18 @@ class ImageViewer {
                     <div class="image-size">${imageData.size}</div>
                 </div>
                 <div class="image-actions">
+                    <div class="order-controls">
+                        <button class="btn btn-secondary order-btn up-btn" onclick="imageViewer.moveImageUp(${imageData.id})" title="上に移動">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <polyline points="18,15 12,9 6,15"></polyline>
+                            </svg>
+                        </button>
+                        <button class="btn btn-secondary order-btn down-btn" onclick="imageViewer.moveImageDown(${imageData.id})" title="下に移動">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <polyline points="6,9 12,15 18,9"></polyline>
+                            </svg>
+                        </button>
+                    </div>
                     <button class="btn btn-primary download-btn" onclick="imageViewer.downloadImage(${imageData.id})">
                         ダウンロード
                     </button>
@@ -228,6 +240,9 @@ class ImageViewer {
             imageItem.style.opacity = '1';
             imageItem.style.transform = 'translateY(0)';
         }, 10);
+        
+        // 矢印ボタンの状態を更新
+        this.updateOrderButtons();
     }
 
     openImageInNewTab(id) {
@@ -270,6 +285,7 @@ class ImageViewer {
                 this.images = this.images.filter(img => img.id !== id);
                 this.updateEmptyState();
                 this.updateControls();
+                this.updateOrderButtons();
             }, 300);
         }
     }
@@ -305,6 +321,7 @@ class ImageViewer {
             this.imageGallery.innerHTML = '';
             this.updateEmptyState();
             this.updateControls();
+            this.updateOrderButtons();
             cleanup();
         };
         const onCancel = () => {
@@ -398,6 +415,70 @@ class ImageViewer {
         const hasImages = this.images.length > 0;
         this.clearAllBtn.disabled = !hasImages;
         this.downloadAllBtn.disabled = !hasImages;
+        this.updateOrderButtons();
+    }
+
+    // 画像を上に移動
+    moveImageUp(id) {
+        const currentIndex = this.images.findIndex(img => img.id === id);
+        if (currentIndex > 0) {
+            // 配列の順序を変更
+            const temp = this.images[currentIndex];
+            this.images[currentIndex] = this.images[currentIndex - 1];
+            this.images[currentIndex - 1] = temp;
+            
+            // DOMの順序を変更
+            const currentElement = this.imageGallery.querySelector(`[data-id="${id}"]`);
+            const previousElement = this.imageGallery.querySelector(`[data-id="${this.images[currentIndex].id}"]`);
+            
+            if (currentElement && previousElement) {
+                this.imageGallery.insertBefore(currentElement, previousElement);
+            }
+            
+            // 矢印ボタンの状態を更新
+            this.updateOrderButtons();
+        }
+    }
+
+    // 画像を下に移動
+    moveImageDown(id) {
+        const currentIndex = this.images.findIndex(img => img.id === id);
+        if (currentIndex < this.images.length - 1) {
+            // 配列の順序を変更
+            const temp = this.images[currentIndex];
+            this.images[currentIndex] = this.images[currentIndex + 1];
+            this.images[currentIndex + 1] = temp;
+            
+            // DOMの順序を変更
+            const currentElement = this.imageGallery.querySelector(`[data-id="${id}"]`);
+            const nextElement = this.imageGallery.querySelector(`[data-id="${this.images[currentIndex].id}"]`);
+            
+            if (currentElement && nextElement) {
+                this.imageGallery.insertBefore(currentElement, nextElement.nextSibling);
+            }
+            
+            // 矢印ボタンの状態を更新
+            this.updateOrderButtons();
+        }
+    }
+
+    // 矢印ボタンの有効/無効状態を更新
+    updateOrderButtons() {
+        const imageItems = this.imageGallery.querySelectorAll('.image-item');
+        imageItems.forEach((item, index) => {
+            const upBtn = item.querySelector('.up-btn');
+            const downBtn = item.querySelector('.down-btn');
+            
+            if (upBtn) {
+                upBtn.disabled = index === 0;
+                upBtn.style.opacity = index === 0 ? '0.5' : '1';
+            }
+            
+            if (downBtn) {
+                downBtn.disabled = index === imageItems.length - 1;
+                downBtn.style.opacity = index === imageItems.length - 1 ? '0.5' : '1';
+            }
+        });
     }
 }
 

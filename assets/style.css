@@ -135,6 +135,38 @@ header p {
 .image-actions {
     display: flex;
     gap: 10px;
+    align-items: center;
+}
+
+.order-controls {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.order-btn {
+    padding: 6px 8px;
+    min-width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+}
+
+.order-btn:hover:not(:disabled) {
+    background: #e9ecef;
+    transform: translateY(-1px);
+}
+
+.order-btn:disabled {
+    cursor: not-allowed;
+    opacity: 0.5;
+}
+
+.order-btn svg {
+    width: 14px;
+    height: 14px;
 }
 
 .btn {
